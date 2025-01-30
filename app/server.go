@@ -28,10 +28,10 @@ func main() {
 	}
 	defer listener.Close()
 
-	_, err = listener.Accept()
+	conn, err := listener.Accept()
 	if err != nil {
 		fmt.Println("Error accepting connection: ", err.Error())
 		os.Exit(1)
 	}
-
+	conn.Write([]byte("+PONG\r\n"))
 }
