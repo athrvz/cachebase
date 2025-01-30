@@ -28,10 +28,24 @@ func main() {
 	}
 	defer listener.Close()
 
-	conn, err := listener.Accept()
-	if err != nil {
-		fmt.Println("Error accepting connection: ", err.Error())
-		os.Exit(1)
+	for {
+		conn, err := listener.Accept()
+		if err != nil {
+			fmt.Println("Error accepting connection: ", err.Error())
+			os.Exit(1)
+		}
+		go handleClient(conn)
 	}
+}
+
+func handleClient(conn net.Conn) {
+	// Read data
+	buff := make([]byte, 1024)
+	_, err := conn.Read(buff)
+
+	if err != nil {
+		conn.Close()
+	}
+
 	conn.Write([]byte("+PONG\r\n"))
 }
