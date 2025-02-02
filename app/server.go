@@ -2,10 +2,11 @@ package main
 
 import (
 	"fmt"
-	"github.com/joho/godotenv"
 	"log"
 	"net"
 	"os"
+
+	"github.com/joho/godotenv"
 )
 
 var _ = net.Listen
@@ -34,7 +35,7 @@ func main() {
 			fmt.Println("Error accepting connection: ", err.Error())
 			os.Exit(1)
 		}
-		go handleClient(conn)
+		handleClient(conn)
 	}
 }
 
@@ -46,6 +47,6 @@ func handleClient(conn net.Conn) {
 	if err != nil {
 		conn.Close()
 	}
-
+	fmt.Println("buff: ", string(buff))
 	conn.Write([]byte("+PONG\r\n"))
 }
