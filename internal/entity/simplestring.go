@@ -2,6 +2,6 @@ package entity
 
 import "fmt"
 
-func (d SimpleString) Enconde() string {
+func (d SimpleString) Encode() string {
 	return fmt.Sprintf("+%s\r\n", d)
 }
