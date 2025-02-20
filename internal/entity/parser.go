@@ -16,9 +16,9 @@ func Parse(data []byte) (interface{}, []byte, error) {
 		parsingType = "Array"
 		parsed, data, err = ParseArray(data)
 
-	// case '$':
-	// 	parsingType = "BulkString"
-	// 	parsed, data, err = ParseBulkString(data)
+	case '$':
+		parsingType = "BulkString"
+		parsed, data, err = ParseBulkString(data)
 
 	case ':':
 		parsingType = "Integer"
