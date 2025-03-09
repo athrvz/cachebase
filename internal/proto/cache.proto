@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+package proto;
+
+option go_package = "cachebase/internal/proto/gen";
+
+// CacheService defines caching service. 
+service CacheService {
+    rpc Get (GetRequest) returns (GetResponse);
+
+    rpc Set (SetRequest) returns (SetResponse);
+
+    rpc Delete (DeleteRequest) returns (DeleteResponse);
+}
+
+message GetRequest {
+    string key = 1;
+}
+
+message GetResponse {
+    bytes value = 1; 
+    bool found = 2;
+}
+
+message SetRequest {
+    string key = 1;
+    bytes value = 2;
+}
+
+message SetResponse {
+    bool success = 1;
+}
+
+message DeleteRequest {
+    string key = 1;
+}
+
+message DeleteResponse {
+    bool success = 1;
+}

@@ -1,32 +1,31 @@
 package main
 
 import (
-	"cachebase/internal/commands"
-	"cachebase/internal/pkg/storage"
-	"fmt"
-	"time"
+	"cachebase/internal/proto/gen"
+	"cachebase/internal/server"
+	"google.golang.org/grpc"
+	"log"
+	"net"
 )
 
 func main() {
-	options := storage.SetOptions{
-		Expiry: nil,
-	}
-	commands.Set("foo", "bar", options)
-	value, found := commands.Get("foo")
-	if found {
-		fmt.Println("foo: ", value)
-	}
-	ttl := 2
-	options.Expiry = &ttl
-	commands.Set("foo", "barWithExp", options)
-	value, found = commands.Get("foo")
-	if found {
-		fmt.Println("foo: ", value)
+	// Create a new gRPC server
+	grpcServer := grpc.NewServer()
+
+	// Register the CacheServer with the gRPC server
+	cacheServer := server.NewCacheServer()
+	gen.RegisterCacheServiceServer(grpcServer, cacheServer)
+
+	// Start listening on a port
+	lis, err := net.Listen("tcp", ":50051")
+	if err != nil {
+		log.Fatalf("failed to listen: %v", err)
 	}
 
-	time.Sleep(3 * time.Millisecond)
-	value, found = commands.Get("foo")
-	if !found {
-		fmt.Println("Not found")
+	log.Println("gRPC server is running on port 50051...")
+
+	// Start the gRPC server
+	if err := grpcServer.Serve(lis); err != nil {
+		log.Fatalf("failed to serve: %v", err)
 	}
 }
