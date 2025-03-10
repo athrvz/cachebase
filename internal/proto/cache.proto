@@ -2,6 +2,8 @@ syntax = "proto3";
 
 package proto;
 
+import "google/protobuf/empty.proto";
+
 option go_package = "cachebase/internal/proto/gen";
 
 // CacheService defines caching service. 
@@ -11,6 +13,8 @@ service CacheService {
     rpc Set (SetRequest) returns (SetResponse);
 
     rpc Delete (DeleteRequest) returns (DeleteResponse);
+
+    rpc Ping (google.protobuf.Empty) returns (PingResponse);
 }
 
 message GetRequest {
@@ -18,13 +22,14 @@ message GetRequest {
 }
 
 message GetResponse {
-    bytes value = 1; 
+    string value = 1; 
     bool found = 2;
 }
 
 message SetRequest {
     string key = 1;
-    bytes value = 2;
+    string value = 2;
+    optional int32 ttl = 3;
 }
 
 message SetResponse {
@@ -37,4 +42,8 @@ message DeleteRequest {
 
 message DeleteResponse {
     bool success = 1;
+}
+
+message PingResponse {
+    string pong = 1;
 }

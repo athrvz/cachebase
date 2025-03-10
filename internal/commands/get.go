@@ -9,7 +9,6 @@ func Get(key string) (interface{}, bool) {
 	storage.Mutex.RLock()
 	record, found := storage.Cache[key]
 	storage.Mutex.RUnlock()
-
 	if !found {
 		return nil, false
 	}
