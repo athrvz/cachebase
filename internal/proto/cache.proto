@@ -15,6 +15,10 @@ service CacheService {
     rpc Delete (DeleteRequest) returns (DeleteResponse);
 
     rpc Ping (google.protobuf.Empty) returns (PingResponse);
+
+    rpc ListPush(ListPushRequest) returns (ListPushResponse);
+
+    rpc ListPop(ListPopRequest) returns (ListPopResponse);
 }
 
 message GetRequest {
@@ -46,4 +50,21 @@ message DeleteResponse {
 
 message PingResponse {
     string pong = 1;
+}
+
+message ListPushRequest {
+    string key = 1;
+    repeated string values = 2;
+}
+
+message ListPushResponse {
+    int32 length = 1;
+}
+
+message ListPopRequest {
+    string key = 1;
+}
+
+message ListPopResponse {
+    string value = 1;
 }

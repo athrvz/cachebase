@@ -20,10 +20,12 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	CacheService_Get_FullMethodName    = "/proto.CacheService/Get"
-	CacheService_Set_FullMethodName    = "/proto.CacheService/Set"
-	CacheService_Delete_FullMethodName = "/proto.CacheService/Delete"
-	CacheService_Ping_FullMethodName   = "/proto.CacheService/Ping"
+	CacheService_Get_FullMethodName      = "/proto.CacheService/Get"
+	CacheService_Set_FullMethodName      = "/proto.CacheService/Set"
+	CacheService_Delete_FullMethodName   = "/proto.CacheService/Delete"
+	CacheService_Ping_FullMethodName     = "/proto.CacheService/Ping"
+	CacheService_ListPush_FullMethodName = "/proto.CacheService/ListPush"
+	CacheService_ListPop_FullMethodName  = "/proto.CacheService/ListPop"
 )
 
 // CacheServiceClient is the client API for CacheService service.
@@ -36,6 +38,8 @@ type CacheServiceClient interface {
 	Set(ctx context.Context, in *SetRequest, opts ...grpc.CallOption) (*SetResponse, error)
 	Delete(ctx context.Context, in *DeleteRequest, opts ...grpc.CallOption) (*DeleteResponse, error)
 	Ping(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*PingResponse, error)
+	ListPush(ctx context.Context, in *ListPushRequest, opts ...grpc.CallOption) (*ListPushResponse, error)
+	ListPop(ctx context.Context, in *ListPopRequest, opts ...grpc.CallOption) (*ListPopResponse, error)
 }
 
 type cacheServiceClient struct {
@@ -86,6 +90,26 @@ func (c *cacheServiceClient) Ping(ctx context.Context, in *emptypb.Empty, opts .
 	return out, nil
 }
 
+func (c *cacheServiceClient) ListPush(ctx context.Context, in *ListPushRequest, opts ...grpc.CallOption) (*ListPushResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListPushResponse)
+	err := c.cc.Invoke(ctx, CacheService_ListPush_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *cacheServiceClient) ListPop(ctx context.Context, in *ListPopRequest, opts ...grpc.CallOption) (*ListPopResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListPopResponse)
+	err := c.cc.Invoke(ctx, CacheService_ListPop_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // CacheServiceServer is the server API for CacheService service.
 // All implementations must embed UnimplementedCacheServiceServer
 // for forward compatibility.
@@ -96,6 +120,8 @@ type CacheServiceServer interface {
 	Set(context.Context, *SetRequest) (*SetResponse, error)
 	Delete(context.Context, *DeleteRequest) (*DeleteResponse, error)
 	Ping(context.Context, *emptypb.Empty) (*PingResponse, error)
+	ListPush(context.Context, *ListPushRequest) (*ListPushResponse, error)
+	ListPop(context.Context, *ListPopRequest) (*ListPopResponse, error)
 	mustEmbedUnimplementedCacheServiceServer()
 }
 
@@ -117,6 +143,12 @@ func (UnimplementedCacheServiceServer) Delete(context.Context, *DeleteRequest) (
 }
 func (UnimplementedCacheServiceServer) Ping(context.Context, *emptypb.Empty) (*PingResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Ping not implemented")
+}
+func (UnimplementedCacheServiceServer) ListPush(context.Context, *ListPushRequest) (*ListPushResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListPush not implemented")
+}
+func (UnimplementedCacheServiceServer) ListPop(context.Context, *ListPopRequest) (*ListPopResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListPop not implemented")
 }
 func (UnimplementedCacheServiceServer) mustEmbedUnimplementedCacheServiceServer() {}
 func (UnimplementedCacheServiceServer) testEmbeddedByValue()                      {}
@@ -211,6 +243,42 @@ func _CacheService_Ping_Handler(srv interface{}, ctx context.Context, dec func(i
 	return interceptor(ctx, in, info, handler)
 }
 
+func _CacheService_ListPush_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListPushRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CacheServiceServer).ListPush(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: CacheService_ListPush_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CacheServiceServer).ListPush(ctx, req.(*ListPushRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _CacheService_ListPop_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListPopRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CacheServiceServer).ListPop(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: CacheService_ListPop_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CacheServiceServer).ListPop(ctx, req.(*ListPopRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // CacheService_ServiceDesc is the grpc.ServiceDesc for CacheService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -233,6 +301,14 @@ var CacheService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Ping",
 			Handler:    _CacheService_Ping_Handler,
+		},
+		{
+			MethodName: "ListPush",
+			Handler:    _CacheService_ListPush_Handler,
+		},
+		{
+			MethodName: "ListPop",
+			Handler:    _CacheService_ListPop_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
