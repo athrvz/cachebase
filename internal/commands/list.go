@@ -39,13 +39,13 @@ func ListPop(key string) (string, bool) {
 	}
 
 	value := list[len(list)-1]
-	list = list[:len(list)-1]
+	newList := list[:len(list)-1]
 
-	if len(list) == 0 {
+	if len(newList) == 0 {
 		delete(storage.Cache, key)
 	} else {
 		storage.Cache[key] = storage.Record{
-			Value:  list,
+			Value:  newList,
 			Expiry: record.Expiry,
 		}
 	}
