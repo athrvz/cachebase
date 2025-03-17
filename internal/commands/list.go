@@ -4,6 +4,7 @@ import (
 	"cachebase/internal/pkg/storage"
 )
 
+// List Push Operation
 func ListPush(key string, values []string) int {
 	storage.Mutex.Lock()
 	defer storage.Mutex.Unlock()
@@ -24,6 +25,7 @@ func ListPush(key string, values []string) int {
 	return len(list)
 }
 
+// List Pop Operation
 func ListPop(key string) (string, bool) {
 	storage.Mutex.Lock()
 	defer storage.Mutex.Unlock()
