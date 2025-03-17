@@ -70,3 +70,25 @@ func (s *CacheServer) Delete(ctx context.Context, req *gen.DeleteRequest) (*gen.
 		Success: true,
 	}, nil
 }
+
+// ListPush handles ListPush RPC request
+func (s *CacheServer) ListPush(ctx context.Context, req *gen.ListPushRequest) (*gen.ListPushResponse, error) {
+	key := req.GetKey()
+	values := req.GetValues()
+	length := commands.ListPush(key, values)
+	return &gen.ListPushResponse{
+		Length: int32(length),
+	}, nil
+}
+
+// ListPop
+func (s *CacheServer) ListPop(ctx context.Context, req *gen.ListPopRequest) (*gen.ListPopResponse, error) {
+	key := req.GetKey()
+	value, exists := commands.ListPop(key)
+	if !exists {
+		return nil, status.Errorf(codes.NotFound, "key not found of list is empty: %s", key)
+	}
+	return &gen.ListPopResponse{
+		Value: value,
+	}, nil
+}
