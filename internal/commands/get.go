@@ -2,7 +2,7 @@ package commands
 
 import (
 	"cachebase/internal/pkg/storage"
-	"time"
+	"cachebase/internal/utilities"
 )
 
 func Get(key string) (interface{}, bool) {
@@ -14,12 +14,11 @@ func Get(key string) (interface{}, bool) {
 	}
 
 	// Check if the key has expired
-	if record.Expiry != nil && time.Now().After(*record.Expiry) {
+	if utilities.IsExpired(record) {
 		storage.Mutex.Lock()
 		delete(storage.Cache, key)
 		storage.Mutex.Unlock()
 		return nil, false
 	}
-
 	return record.Value, true
 }
