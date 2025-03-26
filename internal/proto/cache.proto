@@ -19,6 +19,14 @@ service CacheService {
     rpc ListPush(ListPushRequest) returns (ListPushResponse);
 
     rpc ListPop(ListPopRequest) returns (ListPopResponse);
+
+    rpc SetAdd(SetAddRequest) returns (SetAddResponse);
+
+    rpc SetRemove(SetRemoveRequest) returns (SetRemoveResponse);
+
+    rpc SetIsMember(SetIsMemberRequest) returns (SetIsMemberResponse);
+
+    rpc SetMembers(SetMembersRequest) returns (SetMembersResponse);
 }
 
 message GetRequest {
@@ -52,6 +60,7 @@ message PingResponse {
     string pong = 1;
 }
 
+// (ds) List
 message ListPushRequest {
     string key = 1;
     repeated string values = 2;
@@ -67,4 +76,41 @@ message ListPopRequest {
 
 message ListPopResponse {
     string value = 1;
+}
+
+// (ds) Set
+message SetAddRequest {
+    string key = 1;
+    repeated string values = 2;
+    optional int32 ttl = 3;
+}
+
+message SetAddResponse {
+    int32 added = 1;
+}
+
+message SetRemoveRequest {
+    string key = 1;
+    repeated string values = 2;
+}
+
+message SetRemoveResponse {
+    int32 removed = 1;
+}
+
+message SetIsMemberRequest {
+    string key = 1;
+    string value = 2;
+}
+
+message SetIsMemberResponse {
+    bool is_member = 1;
+}
+
+message SetMembersRequest {
+    string key = 1;
+}
+
+message SetMembersResponse {
+    repeated string members = 1;
 }

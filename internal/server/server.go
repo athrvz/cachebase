@@ -50,7 +50,7 @@ func (s *CacheServer) Ping(ctx context.Context, req *emptypb.Empty) (*gen.PingRe
 // Set handles the Set RPC request
 func (s *CacheServer) Set(ctx context.Context, req *gen.SetRequest) (*gen.SetResponse, error) {
 	key := req.GetKey()
-	value := req.GetValue() // value is byte slice
+	value := req.GetValue()
 	ttl := int(req.GetTtl())
 	// ToDo: grpc support for ttl
 	opts := storage.SetOptions{
@@ -91,4 +91,46 @@ func (s *CacheServer) ListPop(ctx context.Context, req *gen.ListPopRequest) (*ge
 	return &gen.ListPopResponse{
 		Value: value,
 	}, nil
+}
+
+// SetAdd function
+func (s *CacheServer) SetAdd(ctx context.Context, req *gen.SetAddRequest) (*gen.SetAddResponse, error) {
+	key := req.GetKey()
+	values := req.GetValues()
+	ttl := int(req.GetTtl())
+	// ToDo: grpc support for ttl
+	opts := storage.SetOptions{
+		Expiry: &ttl,
+	}
+	added := commands.SetAdd(key, values, opts)
+	return &gen.SetAddResponse{
+		Added: int32(added),
+	}, nil
+}
+
+func (s *CacheServer) SetRemove(ctx context.Context, req *gen.SetRemoveRequest) (*gen.SetRemoveResponse, error) {
+	key := req.GetKey()
+	values := req.GetValues()
+	removed := commands.SetRemove(key, values)
+	return &gen.SetRemoveResponse{
+		Removed: int32(removed),
+	}, nil
+}
+
+// SetIsMember handles the SetIsMember RPC request.
+func (s *CacheServer) SetIsMember(ctx context.Context, req *gen.SetIsMemberRequest) (*gen.SetIsMemberResponse, error) {
+	key := req.GetKey()
+	value := req.GetValue()
+	isMember := commands.SetIsMember(key, value)
+	return &gen.SetIsMemberResponse{IsMember: isMember}, nil
+}
+
+// SetMembers handles the SetMembers RPC request.
+func (s *CacheServer) SetMembers(ctx context.Context, req *gen.SetMembersRequest) (*gen.SetMembersResponse, error) {
+	key := req.GetKey()
+	members, exists := commands.SetMembers(key)
+	if !exists {
+		return nil, status.Errorf(codes.NotFound, "key not found: %s", key)
+	}
+	return &gen.SetMembersResponse{Members: members}, nil
 }

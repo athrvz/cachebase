@@ -20,12 +20,16 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	CacheService_Get_FullMethodName      = "/proto.CacheService/Get"
-	CacheService_Set_FullMethodName      = "/proto.CacheService/Set"
-	CacheService_Delete_FullMethodName   = "/proto.CacheService/Delete"
-	CacheService_Ping_FullMethodName     = "/proto.CacheService/Ping"
-	CacheService_ListPush_FullMethodName = "/proto.CacheService/ListPush"
-	CacheService_ListPop_FullMethodName  = "/proto.CacheService/ListPop"
+	CacheService_Get_FullMethodName         = "/proto.CacheService/Get"
+	CacheService_Set_FullMethodName         = "/proto.CacheService/Set"
+	CacheService_Delete_FullMethodName      = "/proto.CacheService/Delete"
+	CacheService_Ping_FullMethodName        = "/proto.CacheService/Ping"
+	CacheService_ListPush_FullMethodName    = "/proto.CacheService/ListPush"
+	CacheService_ListPop_FullMethodName     = "/proto.CacheService/ListPop"
+	CacheService_SetAdd_FullMethodName      = "/proto.CacheService/SetAdd"
+	CacheService_SetRemove_FullMethodName   = "/proto.CacheService/SetRemove"
+	CacheService_SetIsMember_FullMethodName = "/proto.CacheService/SetIsMember"
+	CacheService_SetMembers_FullMethodName  = "/proto.CacheService/SetMembers"
 )
 
 // CacheServiceClient is the client API for CacheService service.
@@ -40,6 +44,10 @@ type CacheServiceClient interface {
 	Ping(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*PingResponse, error)
 	ListPush(ctx context.Context, in *ListPushRequest, opts ...grpc.CallOption) (*ListPushResponse, error)
 	ListPop(ctx context.Context, in *ListPopRequest, opts ...grpc.CallOption) (*ListPopResponse, error)
+	SetAdd(ctx context.Context, in *SetAddRequest, opts ...grpc.CallOption) (*SetAddResponse, error)
+	SetRemove(ctx context.Context, in *SetRemoveRequest, opts ...grpc.CallOption) (*SetRemoveResponse, error)
+	SetIsMember(ctx context.Context, in *SetIsMemberRequest, opts ...grpc.CallOption) (*SetIsMemberResponse, error)
+	SetMembers(ctx context.Context, in *SetMembersRequest, opts ...grpc.CallOption) (*SetMembersResponse, error)
 }
 
 type cacheServiceClient struct {
@@ -110,6 +118,46 @@ func (c *cacheServiceClient) ListPop(ctx context.Context, in *ListPopRequest, op
 	return out, nil
 }
 
+func (c *cacheServiceClient) SetAdd(ctx context.Context, in *SetAddRequest, opts ...grpc.CallOption) (*SetAddResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SetAddResponse)
+	err := c.cc.Invoke(ctx, CacheService_SetAdd_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *cacheServiceClient) SetRemove(ctx context.Context, in *SetRemoveRequest, opts ...grpc.CallOption) (*SetRemoveResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SetRemoveResponse)
+	err := c.cc.Invoke(ctx, CacheService_SetRemove_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *cacheServiceClient) SetIsMember(ctx context.Context, in *SetIsMemberRequest, opts ...grpc.CallOption) (*SetIsMemberResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SetIsMemberResponse)
+	err := c.cc.Invoke(ctx, CacheService_SetIsMember_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *cacheServiceClient) SetMembers(ctx context.Context, in *SetMembersRequest, opts ...grpc.CallOption) (*SetMembersResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SetMembersResponse)
+	err := c.cc.Invoke(ctx, CacheService_SetMembers_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // CacheServiceServer is the server API for CacheService service.
 // All implementations must embed UnimplementedCacheServiceServer
 // for forward compatibility.
@@ -122,6 +170,10 @@ type CacheServiceServer interface {
 	Ping(context.Context, *emptypb.Empty) (*PingResponse, error)
 	ListPush(context.Context, *ListPushRequest) (*ListPushResponse, error)
 	ListPop(context.Context, *ListPopRequest) (*ListPopResponse, error)
+	SetAdd(context.Context, *SetAddRequest) (*SetAddResponse, error)
+	SetRemove(context.Context, *SetRemoveRequest) (*SetRemoveResponse, error)
+	SetIsMember(context.Context, *SetIsMemberRequest) (*SetIsMemberResponse, error)
+	SetMembers(context.Context, *SetMembersRequest) (*SetMembersResponse, error)
 	mustEmbedUnimplementedCacheServiceServer()
 }
 
@@ -149,6 +201,18 @@ func (UnimplementedCacheServiceServer) ListPush(context.Context, *ListPushReques
 }
 func (UnimplementedCacheServiceServer) ListPop(context.Context, *ListPopRequest) (*ListPopResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListPop not implemented")
+}
+func (UnimplementedCacheServiceServer) SetAdd(context.Context, *SetAddRequest) (*SetAddResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SetAdd not implemented")
+}
+func (UnimplementedCacheServiceServer) SetRemove(context.Context, *SetRemoveRequest) (*SetRemoveResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SetRemove not implemented")
+}
+func (UnimplementedCacheServiceServer) SetIsMember(context.Context, *SetIsMemberRequest) (*SetIsMemberResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SetIsMember not implemented")
+}
+func (UnimplementedCacheServiceServer) SetMembers(context.Context, *SetMembersRequest) (*SetMembersResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SetMembers not implemented")
 }
 func (UnimplementedCacheServiceServer) mustEmbedUnimplementedCacheServiceServer() {}
 func (UnimplementedCacheServiceServer) testEmbeddedByValue()                      {}
@@ -279,6 +343,78 @@ func _CacheService_ListPop_Handler(srv interface{}, ctx context.Context, dec fun
 	return interceptor(ctx, in, info, handler)
 }
 
+func _CacheService_SetAdd_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SetAddRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CacheServiceServer).SetAdd(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: CacheService_SetAdd_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CacheServiceServer).SetAdd(ctx, req.(*SetAddRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _CacheService_SetRemove_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SetRemoveRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CacheServiceServer).SetRemove(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: CacheService_SetRemove_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CacheServiceServer).SetRemove(ctx, req.(*SetRemoveRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _CacheService_SetIsMember_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SetIsMemberRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CacheServiceServer).SetIsMember(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: CacheService_SetIsMember_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CacheServiceServer).SetIsMember(ctx, req.(*SetIsMemberRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _CacheService_SetMembers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SetMembersRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CacheServiceServer).SetMembers(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: CacheService_SetMembers_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CacheServiceServer).SetMembers(ctx, req.(*SetMembersRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // CacheService_ServiceDesc is the grpc.ServiceDesc for CacheService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -309,6 +445,22 @@ var CacheService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListPop",
 			Handler:    _CacheService_ListPop_Handler,
+		},
+		{
+			MethodName: "SetAdd",
+			Handler:    _CacheService_SetAdd_Handler,
+		},
+		{
+			MethodName: "SetRemove",
+			Handler:    _CacheService_SetRemove_Handler,
+		},
+		{
+			MethodName: "SetIsMember",
+			Handler:    _CacheService_SetIsMember_Handler,
+		},
+		{
+			MethodName: "SetMembers",
+			Handler:    _CacheService_SetMembers_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
