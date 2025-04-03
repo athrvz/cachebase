@@ -30,7 +30,8 @@ func SetAdd(key string, values []string, options storage.SetOptions) int {
 }
 
 func SetRemove(key string, values []string) int {
-	storage.Mutex.Lock()
+	mu := storage.Keylock.GetLock(key)
+	mu.Lock()
 	// Get existing record
 	record, found := storage.Cache[key]
 	if !found {
@@ -51,23 +52,20 @@ func SetRemove(key string, values []string) int {
 	}
 
 	if len(set) == 0 {
-		storage.Mutex.Unlock()
+		mu.Unlock()
 		Delete(key)
 	} else {
 		storage.Cache[key] = storage.Record{
 			Value:  set,
 			Expiry: record.Expiry,
 		}
-		storage.Mutex.Unlock()
+		mu.Unlock()
 	}
 	return removed
 }
 
 func SetIsMember(key, value string) bool {
-
 	resultSet, found := Get(key)
-	storage.Mutex.RLock()
-	defer storage.Mutex.RUnlock()
 	if !found {
 		return false
 	}
@@ -80,9 +78,6 @@ func SetIsMember(key, value string) bool {
 }
 
 func SetMembers(key string) ([]string, bool) {
-	storage.Mutex.RLock()
-	defer storage.Mutex.RUnlock()
-
 	resValue, found := Get(key)
 	if !found {
 		return nil, false

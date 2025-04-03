@@ -8,8 +8,10 @@ import (
 
 func Set(key string, value interface{}, options storage.SetOptions) (bool, storage.Record) {
 	atomic.AddUint64(&storage.WriteOperations, uint64(1))
-	storage.Mutex.Lock()
-	defer storage.Mutex.Unlock()
+	// storage.Mutex.Lock()
+	mu := storage.Keylock.GetLock(key)
+	mu.Lock()
+	defer mu.Unlock()
 
 	record := storage.Record{
 		Value: value,

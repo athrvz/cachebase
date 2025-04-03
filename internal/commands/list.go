@@ -6,8 +6,9 @@ import (
 
 // List Push Operation
 func ListPush(key string, values []string) int {
-	storage.Mutex.Lock()
-	defer storage.Mutex.Unlock()
+	mu := storage.Keylock.GetLock(key)
+	mu.Lock()
+	defer mu.Unlock()
 
 	// Get existing or create new
 	record, exists := storage.Cache[key]
@@ -27,8 +28,9 @@ func ListPush(key string, values []string) int {
 
 // List Pop Operation
 func ListPop(key string) (string, bool) {
-	storage.Mutex.Lock()
-	defer storage.Mutex.Unlock()
+	mu := storage.Keylock.GetLock(key)
+	mu.Lock()
+	defer mu.Unlock()
 
 	record, exists := storage.Cache[key]
 	if !exists {
