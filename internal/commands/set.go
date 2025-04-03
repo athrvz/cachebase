@@ -2,10 +2,12 @@ package commands
 
 import (
 	storage "cachebase/internal/pkg/storage"
+	"sync/atomic"
 	"time"
 )
 
 func Set(key string, value interface{}, options storage.SetOptions) (bool, storage.Record) {
+	atomic.AddUint64(&storage.WriteOperations, uint64(1))
 	storage.Mutex.Lock()
 	defer storage.Mutex.Unlock()
 
