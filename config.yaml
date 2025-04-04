@@ -1,0 +1,13 @@
+# cachebase.yaml
+rdb:
+  save_intervals:
+    - seconds: 10    # 15 minutes
+      changes: 1      # Save if ≥1 write
+    # - seconds: 300    # 5 minutes
+    #   changes: 100    # Save if ≥100 writes
+  filepath: "D:/cachebase/var/data/"
+  temp_file_pattern: "cdb-autosave"
+  cdb_file_extension: ".gz"
+  background_save: true
+  compression: "gzip"
+  max_concurrent_saves: 1

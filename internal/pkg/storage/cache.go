@@ -15,6 +15,8 @@ type SetOptions struct {
 }
 
 var (
-	Cache = make(map[string]Record)
-	Mutex = &sync.RWMutex{}
+	Cache           = make(map[string]Record)
+	Mutex           = &sync.RWMutex{}
+	Keylock         = &KeyLock{locks: make(map[string]*sync.RWMutex)}
+	WriteOperations uint64
 )

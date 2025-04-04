@@ -6,9 +6,11 @@ import (
 )
 
 func Get(key string) (interface{}, bool) {
-	storage.Mutex.RLock()
+	mu := storage.Keylock.GetLock(key)
+	mu.RLock()
+
 	record, found := storage.Cache[key]
-	storage.Mutex.RUnlock()
+	mu.RUnlock()
 	if !found {
 		return nil, false
 	}
